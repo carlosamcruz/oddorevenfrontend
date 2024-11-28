@@ -43,4 +43,4 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 npx create-react-app@latest oddorevenfrontend --template typescript
 npm i web3
-npm i dotenv
+npm i react-router-dom
