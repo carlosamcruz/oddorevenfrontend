@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { doLogin } from './Web3Service';
 import { json } from 'stream/consumers';
-
 
 function Login() {
 
   const [message, setMessage] = useState("");
 
+  useEffect(() => {
+
+    if(localStorage.getItem("account") !== null)
+      alert("Já está autenticado");
+
+  }, []);
 
   function onBtnClick(){
 
