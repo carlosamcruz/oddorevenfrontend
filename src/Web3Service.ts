@@ -53,3 +53,8 @@ export async function doLogin() : Promise <LoginResult> {
         isAdmin: accounts[0] === String(ownerAddress).toLocaleLowerCase()
     } as LoginResult;
 }
+
+export function doLogout(){
+    localStorage.removeItem("account");
+    localStorage.removeItem("isAdmin");
+}
