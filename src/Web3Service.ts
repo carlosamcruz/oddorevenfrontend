@@ -58,3 +58,25 @@ export function doLogout(){
     localStorage.removeItem("account");
     localStorage.removeItem("isAdmin");
 }
+
+export type Dashboard = {
+    bid?: string;
+    commission?: number;
+    address?: string;
+}
+
+export async function getDashboard(): Promise <Dashboard>{
+    const contract = getContract(); //inicializa um WEB3 do zero;
+
+    /*
+    const address = await contract.methods.getImplementationAddress().call();
+
+    if(/^(0x00+)$/.test(String(address)))
+        return {bid: Web3.utils.toWei("0.01", "ether"), commission: 10, address} as Dashboard;
+    */
+
+    const bid = await contract.methods.bidMin().call();
+    const commission = await contract.methods.commission().call();
+
+    return {bid: String(bid), commission: Number(commission), address: String(contract.options.address).toLocaleLowerCase()} as Dashboard;    
+}
