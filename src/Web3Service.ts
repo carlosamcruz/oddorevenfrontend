@@ -1,6 +1,7 @@
 import Web3, { Contract, ContractAbi } from "web3";
 
 import ABI from "./abi.json"
+import { AbiType } from "./AbiType";
 import { contract } from "web3/lib/commonjs/eth.exports";
 
 type LoginResult = {
@@ -26,7 +27,7 @@ function getContract(web3?: Web3) : Contract <ContractAbi>{
     //return new web3.eth.Contract(ABI, CONTRACT_ADDRESS, {from: accounts[0]});
 
     //undefined assume o padrão MetaMask
-    return new web3.eth.Contract(ABI, CONTRACT_ADDRESS, {from: localStorage.getItem("account") || undefined});
+    return new web3.eth.Contract(ABI as AbiType, CONTRACT_ADDRESS, {from: localStorage.getItem("account") || undefined});
 }
 
 export async function doLogin() : Promise <LoginResult> {
@@ -63,6 +64,7 @@ export type Dashboard = {
     bid?: string;
     commission?: number;
     address?: string;
+    feeSum?: string;
 }
 
 export async function getDashboard(): Promise <Dashboard>{
@@ -75,8 +77,33 @@ export async function getDashboard(): Promise <Dashboard>{
         return {bid: Web3.utils.toWei("0.01", "ether"), commission: 10, address} as Dashboard;
     */
 
+    const web3 = getWeb3();
+
+
+    const ownerAddress = await contract.methods.owner().call();
+
+
     const bid = await contract.methods.bidMin().call();
     const commission = await contract.methods.commission().call();
+    const feeSum = await web3.eth.getBalance(String(ownerAddress).toLocaleLowerCase());
+    console.log("Fee sum: ", feeSum);
 
-    return {bid: String(bid), commission: Number(commission), address: String(contract.options.address).toLocaleLowerCase()} as Dashboard;    
+    return {
+        bid: String(bid), 
+        commission: Number(commission), 
+        address: String(contract.options.address).toLocaleLowerCase(),
+        feeSum: String(feeSum)
+    } as Dashboard;    
+}
+
+export async function setCommission(newCommission: number): Promise<string>{
+    const contract = getContract();
+    const tx = await contract.methods.setComission(BigInt(newCommission)).send();
+    return tx.transactionHash;
+}
+
+export async function setBid(newBid: string): Promise<string>{
+    const contract = getContract();
+    const tx = await contract.methods.setBid(newBid).send();
+    return tx.transactionHash;
 }

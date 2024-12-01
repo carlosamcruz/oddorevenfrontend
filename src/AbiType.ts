@@ -1,4 +1,4 @@
-[
+export type AbiType =  [
     {
       "inputs": [],
       "stateMutability": "nonpayable",

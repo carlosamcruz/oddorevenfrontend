@@ -1,9 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import Header from './Header';
-//import { Dashboard, getDashboard, upgrade, setBid, setCommission } from './Web3Service';
-import { Dashboard, getDashboard } from './Web3Service';
-
+import { Dashboard, getDashboard, setBid, setCommission } from './Web3Service';
 
 function Admin() {
   const [message, setMessage] = useState("");
@@ -11,7 +9,6 @@ function Admin() {
 
   useEffect(()=>{
 
-    
     getDashboard()
       .then(dashboard => setDashboard(dashboard))
       .catch(err => setMessage(err.message));
@@ -19,48 +16,38 @@ function Admin() {
 
   function onInputChange(event: React.ChangeEvent<HTMLInputElement>){
 
-    //setDashboard(prevState => ({...prevState, [event.target.id]:event.target.value}))
+    setDashboard(prevState => ({...prevState, [event.target.id]:event.target.value}))
   }
 
+  /*
   function onUpgradeClick(){
-    
     if(!dashboard?.address)
       return setMessage("Address is required.");
-
-    /*
     upgrade(dashboard.address)
       .then(tx => setMessage(tx))
       .catch(err => setMessage(err.message));
-
-      */
-
   }
+  */
   function onChangeCommissionClick(){
         
     if(!dashboard?.commission)
       return setMessage("Commission is required.");
-
-    /*
+    
     setCommission(dashboard.commission)
       .then(tx => setMessage(tx))
       .catch(err => setMessage(err.message));
-
-      */
   }
 
   function onChangeBidClick(){
-    /*
+
     if(!dashboard?.bid)
       return setMessage("Bid is required.");
 
     setBid(dashboard.bid)
       .then(tx => setMessage(tx))
       .catch(err => setMessage(err.message));
-
-      */
   }
   
-
   return (
     <div className='container'>
         <Header />
@@ -89,22 +76,22 @@ function Admin() {
                     <input type='number' className='form-control' id='commission' value={dashboard?.commission || ""} onChange={onInputChange}/>
                     <span className='input-group-text bg-secondary'>%</span>
                     <button type='button' className='btn btn-primary d-inline-flex align-items-center' onClick={onChangeCommissionClick}>Change Commission</button>
-
                   </div>
                 </div>
               </div>
-              <div className='row py-5'>
 
-                <div className='col-sm-12'>
-                  <label htmlFor='address' className='form-label'> New Contract (address):</label>
+              <div className='row py-5 justify-content-center'>
+
+                <div className='col-sm-6'>
+                  <label htmlFor='address' className='form-label'> Balance (owner):</label>
                     <div className='input-group'>
-                      <input type='text' className='form-control' id='address' value={dashboard?.address || ""} onChange={onInputChange}/>
+                      <input type='text' className='form-control text-center' id='address' value={dashboard?.feeSum || ""} onChange={onInputChange}/>
+                      {/*
                       <button type='button' className='btn btn-primary d-inline-flex align-items-center' onClick={onUpgradeClick}>Upgrade Contract</button>
+                      */}
                   </div>
                 </div>
-
               </div>
-
             </div>
         </main>
     </div>
@@ -112,22 +99,3 @@ function Admin() {
 }
 
 export default Admin;
-
-/*
-import React from 'react';
-import Header from './Header';
-
-function Admin() {
-  return (
-    <div className="container">
-      <Header />
-      <main>
-        Admin Page
-      </main>
-    </div>
-  );
-}
-
-export default Admin;
-*/
-
